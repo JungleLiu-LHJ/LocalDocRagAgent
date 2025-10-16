@@ -1,0 +1,2 @@
+# LocalDocRagAgent
+pdf,markdown,txt
