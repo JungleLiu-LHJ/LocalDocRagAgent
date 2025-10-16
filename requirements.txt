@@ -1,0 +1,12 @@
+torch>=2.2.0
+transformers>=4.38.0
+sentencepiece>=0.1.99
+accelerate>=0.28.0
+pypdf>=4.1.0
+faiss-cpu>=1.7.4
+numpy>=1.24.0
+requests>=2.31.0
+langchain>=0.1.17
+langchain-community>=0.0.34
+langchain-openai>=0.1.4
+langchain-text-splitters>=0.0.1
