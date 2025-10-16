@@ -1,4 +1,4 @@
-# Local PDF RAG Assistant
+# Doc RAG Assistant
 
 [简体中文 README](README.zh-CN.md)
 
