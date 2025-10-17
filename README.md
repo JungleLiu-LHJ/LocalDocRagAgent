@@ -2,6 +2,13 @@
 
 [简体中文 README](README.zh-CN.md)
 
+I was summarizing technical documents from a previous project and wanted LLM to help extract small, precise points. Feeding everything to the LLM at once produced poor results, so I built this project. Since each document has a specific theme, I select relevant passages from related documents as context, ensuring the context is concise and highly relevant. The answers also indicate which document and page number were used. This is especially useful when there are many documents you don’t want to read but still want high-quality summaries.
+
+The project consists of two parts: data preparation and summarization.
+
+* Data preparation: does NOT involve the LLM. It’s done offline using algorithms to summarize documents and generate embeddings, so you don’t waste tokens even with many documents.
+* Summarization: once the data is prepared, you can ask questions directly. The system uses RAG to find the most concise, relevant context and feeds that to the LLM to generate answers with citations.
+
 Build a local, privacy‑friendly RAG (Retrieval‑Augmented Generation) assistant over your PDFs, Markdown, and TXT files. The pipeline prepares summaries and vector indexes locally, then answers questions with LLM.
 
 ## Features
@@ -99,12 +106,10 @@ This step will:
 - Build two FAISS indexes under `data/vector_index/{doc_index,chunk_index}`
 
 3) Ask questions
-
-By default the chat model is `deepseek-chat` via `https://api.deepseek.com`.
-Provide an API key via `--api-key` or `DEEPSEEK_API_KEY`.
+   Provide an API key via `--api-key` or `API_KEY`.
 
 ```bash
-export DEEPSEEK_API_KEY=sk-...   # or pass --api-key
+export API_KEY=sk-...   # or pass --api-key
 
 python -m src.main ask \
   "What are the main findings in the Argus ClickHouse report?" \
@@ -173,7 +178,7 @@ Key options:
 - FAISS load errors: ensure `data/vector_index/doc_index` and `chunk_index` exist after `prepare`.
 - Empty results: verify your `data/pdfs` contains parsable text; scanned PDFs may need OCR first.
 - Transformers performance: try `--summary-device mps` on Apple Silicon, or choose a smaller model.
-- API key: set `DEEPSEEK_API_KEY` or pass `--api-key`; use `--base-url` for non‑DeepSeek endpoints.
+- API key: set `API_KEY` or pass `--api-key`; use `--base-url` for non‑DeepSeek endpoints.
 
 ## Contributing
 

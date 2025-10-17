@@ -2,6 +2,11 @@
 
 我在总结之前项目的技术文档的时候，想让LLM帮我总结一些细小的点，可是一股脑喂给LLM感觉效果很不好。所以做了这个项目。因为每个文档是有一定主题的，所以组织上下文的时候想从相关的文章里面选取相关的内容作为上下文，这样可以保证上下文非常精炼和相关。并且回答会给出采用了哪个文档的第几页。特别针对很多文档，自己懒得读，但是又想获取高质量的总结的。
 
+该项目分为两部分，数据准备和总结
+
+* 数据准备：**不需要llm参与**，都是离线计算，用了一些离线的算法来总结文章内容和生成向量，不用担心文章太多浪费token
+* 总结：数据准备好后，可以直接提问，会通过rag的方式寻找最接近最精简的上下文一起喂给llm生成结果
+
 在本地为 PDF、Markdown、TXT 文档构建检索增强生成（RAG）助手。管道在本地完成摘要与向量索引的构建，然后喂给LLM生成带引用的答案。
 
 ## 功能特点
@@ -49,8 +54,6 @@ pip install -U pip
 pip install -r requirements.txt
 ```
 
-
-
 ## 快速开始
 
 1) 放入文档
@@ -62,7 +65,9 @@ pip install -r requirements.txt
 ```bash
 python -m src.main prepare
 ```
+
 或者
+
 ```bash
 # 在仓库根目录执行
 python -m src.main prepare \
@@ -164,7 +169,7 @@ ask      基于已构建的知识库进行问答
 - FAISS 加载失败：确认执行过 `prepare` 且 `data/vector_index/doc_index`、`chunk_index` 存在。
 - 结果为空：确认 `data/pdfs` 下是可解析文本；扫描版 PDF 可能需要 OCR 预处理。
 - 摘要性能：Apple 设备尝试 `--summary-device mps`，或改用更小模型。
-- API 密钥：设置 `DEEPSEEK_API_KEY` 或传 `--api-key`；自建/第三方服务请用 `--base-url` 指向其地址。
+- API 密钥：设置 `API_KEY` 或传 `--api-key`；自建/第三方服务请用 `--base-url` 指向其地址。
 
 ## 参与贡献
 

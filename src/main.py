@@ -46,7 +46,7 @@ def parse_args(argv: List[str]) -> argparse.Namespace:
     ask.add_argument("--base-url", type=str, default=None, help="API base URL (defaults to DeepSeek).")
     ask.add_argument("--temperature", type=float, default=0.1, help="Generation temperature.")
     ask.add_argument("--max-tokens", type=int, default=512, help="Maximum new tokens for the answer.")
-    ask.add_argument("--api-key", type=str, default=None, help="API key for the chat model (defaults to DEEPSEEK_API_KEY).")
+    ask.add_argument("--api-key", type=str, default=None, help="API key for the chat model (defaults to API_KEY).")
 
     return parser.parse_args(argv)
 
@@ -103,9 +103,9 @@ def run_ask(args: argparse.Namespace) -> None:
     chunk_store = FAISS.load_local(str(chunk_index), embedder.embeddings, allow_dangerous_deserialization=True)
 
     base_url = args.base_url or "https://api.deepseek.com"
-    api_key = args.api_key or os.environ.get("DEEPSEEK_API_KEY")
+    api_key = args.api_key or os.environ.get("API_KEY")
     if not api_key:
-        raise ValueError("API key required. Provide --api-key or set DEEPSEEK_API_KEY.")
+        raise ValueError("API key required. Provide --api-key or set API_KEY.")
 
     retriever = HierarchicalRetriever(
         document_store=doc_store,
