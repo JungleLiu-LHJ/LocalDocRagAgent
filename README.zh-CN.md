@@ -1,6 +1,6 @@
-# 本地 文档 RAG 助手
+# 文档RAG助手
 
-我在总结之前项目的技术文档的时候，想让LLM帮我总结一些细小的点，可是一股脑喂给LLM感觉效果很不好。所以做了这个项目。
+我在总结之前项目的技术文档的时候，想让LLM帮我总结一些细小的点，可是一股脑喂给LLM感觉效果很不好。所以做了这个项目。因为每个文档是有一定主题的，所以组织上下文的时候想从相关的文章里面选取相关的内容作为上下文，这样可以保证上下文非常精炼和相关。并且回答会给出采用了哪个文档的第几页。特别针对很多文档，自己懒得读，但是又想获取高质量的总结的。
 
 在本地为 PDF、Markdown、TXT 文档构建检索增强生成（RAG）助手。管道在本地完成摘要与向量索引的构建，然后喂给LLM生成带引用的答案。
 
@@ -49,28 +49,7 @@ pip install -U pip
 pip install -r requirements.txt
 ```
 
-如果在 Apple Silicon 上安装 PyTorch 较慢，请参考 https://pytorch.org 提供的官方安装指令，再安装其余依赖。
 
-## 项目结构
-
-```
-./
-├── data/
-│   ├── pdfs/           # 放入源文档（PDF/MD/TXT）
-│   ├── summaries/      # 生成的文档级摘要（JSON）
-│   └── vector_index/   # 生成的 FAISS 索引
-├── src/
-│   ├── main.py                  # 命令行入口（prepare / ask）
-│   ├── pdf_loader.py            # 读取 PDF/MD/TXT
-│   ├── text_splitter.py         # 语义切分
-│   ├── summarizer.py            # HF transformers 摘要
-│   ├── embedder.py              # BAAI/bge-m3 向量化
-│   ├── index_builder.py         # 构建 FAISS 索引
-│   ├── hierarchical_retriever.py# 文档→分块的分层检索
-│   └── types.py
-├── requirements.txt
-└── agent.md                     # 架构与设计说明
-```
 
 ## 快速开始
 
@@ -80,6 +59,10 @@ pip install -r requirements.txt
 
 2) 构建知识库（摘要 + 索引）
 
+```bash
+python -m src.main prepare
+```
+或者
 ```bash
 # 在仓库根目录执行
 python -m src.main prepare \
@@ -94,17 +77,25 @@ python -m src.main prepare \
 
 该步骤将：
 
-- 读取文档并切分为片段
 - 为每个文档生成摘要并抽取关键词
+- 读取文档并切分为片段
 - 在 `data/vector_index/{doc_index,chunk_index}` 下生成两个 FAISS 索引
 
 3) 提问
 
-默认使用 `https://api.deepseek.com` 的 `deepseek-chat` 模型。
-通过 `--api-key` 或环境变量 `DEEPSEEK_API_KEY` 提供密钥。
+通过 `--api-key` 或环境变量 `API_KEY` 提供密钥。
 
 ```bash
-export DEEPSEEK_API_KEY=sk-...   # 或使用 --api-key 显式传入
+export API_KEY=...   # 或使用 --api-key 显式传入
+
+python -m src.main ask "该项目做了哪些性能优化" \
+--api-key xxxxx
+--model  xxxx
+--base-url
+```
+
+```bash
+export API_KEY=...   # 或使用 --api-key 显式传入
 
 python -m src.main ask \
   "Argus ClickHouse 报告的主要结论是什么？" \
